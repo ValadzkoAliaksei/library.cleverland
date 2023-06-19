@@ -22,6 +22,7 @@ export const initialState: BooksType = {
         isSuccess: false,
         isError: false,
         data: null,
+        isAllDownloaded: false,
     },
     book: {
         isLoading: false,
@@ -67,16 +68,33 @@ export const booksSlice = createSlice({
         bookListRequest: (state) => {
             state.bookList.isLoading = true;
         },
+        bookListRequestAllDownloaded: (state, action: PayloadAction<boolean>) => {
+            state.bookList.isAllDownloaded = action.payload;
+        },
+        bookListRequestWithPagination: (state, action: PayloadAction<string>) => {
+            state.bookList.isLoading = true;
+        },
         bookListRequestSuccess: (state, action: PayloadAction<BookListItem[]>) => {
             state.bookList.isLoading = false;
             state.bookList.isError = false;
             state.bookList.isSuccess = true;
             state.bookList.data = action.payload;
         },
+        bookListRequestWithPaginationSuccess: (state, action: PayloadAction<BookListItem[]>) => {
+            state.bookList.isLoading = false;
+            state.bookList.isError = false;
+            state.bookList.isSuccess = true;
+            state.bookList.data = state.bookList.data
+                ? [...state.bookList.data, ...action.payload]
+                : action.payload;
+        },
         bookListRequestFailure: (state) => {
             state.bookList.isLoading = false;
             state.bookList.isError = true;
             state.bookList.isSuccess = false;
+            state.bookList.data = null;
+        },
+        bookListRequestClean: (state) => {
             state.bookList.data = null;
         },
 
@@ -229,6 +247,10 @@ export const {
     bookListRequest,
     bookListRequestSuccess,
     bookListRequestFailure,
+    bookListRequestWithPagination,
+    bookListRequestWithPaginationSuccess,
+    bookListRequestAllDownloaded,
+    bookListRequestClean,
     bookRequest,
     bookRequestSuccess,
     bookRequestFailure,
