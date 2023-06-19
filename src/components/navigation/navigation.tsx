@@ -112,7 +112,7 @@ export const Navigation = ({
                         </NavLink>
                     </li>
                     {isMenuBook &&
-                        bookCategories?.map(({ name, path, id }) => (
+                        bookCategories?.map(({ name, path, id, booksCount }) => (
                             <li key={id}>
                                 <NavLink
                                     to={`${NAV_MENU_MAIN.books.path}/${path}`}
@@ -134,7 +134,7 @@ export const Navigation = ({
                                     )}
                                     data-test-id={`${dataTestid}-book-count-for-${path}`}
                                 >
-                                    {booksCount(name)}
+                                    {booksCount}
                                 </span>
                             </li>
                         ))}
