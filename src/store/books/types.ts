@@ -76,6 +76,11 @@ export type BookListItem = {
     ];
 };
 
+export type BookListPaginationPayload = {
+    pageNumber: number;
+    category: string;
+};
+
 export type BookDataType = {
     id: number;
     title: string;

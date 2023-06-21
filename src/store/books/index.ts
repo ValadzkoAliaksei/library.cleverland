@@ -13,6 +13,7 @@ import {
     BookingResponseSuccess,
     BookingUpdatePayload,
     BookListItem,
+    BookListPaginationPayload,
     BooksType,
 } from './types';
 
@@ -71,7 +72,10 @@ export const booksSlice = createSlice({
         bookListRequestAllDownloaded: (state, action: PayloadAction<boolean>) => {
             state.bookList.isAllDownloaded = action.payload;
         },
-        bookListRequestWithPagination: (state, action: PayloadAction<string>) => {
+        bookListRequestWithPagination: (
+            state,
+            action: PayloadAction<BookListPaginationPayload>,
+        ) => {
             state.bookList.isLoading = true;
         },
         bookListRequestSuccess: (state, action: PayloadAction<BookListItem[]>) => {

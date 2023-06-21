@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
-import { BOOKS_LIST } from '../../constants/books-list';
 import { MenuViewEnum } from '../../constants/menu-view';
-import { NAV_MENU_ALL } from '../../constants/nav-menu-list';
 import { bookListRequestClean, bookListRequestWithPagination } from '../../store/books';
 import {
     getBookCategories,
@@ -25,8 +23,8 @@ type ContentProps = {
 
 export const Content = ({ menuView }: ContentProps) => {
     const [data, setData] = useState<BookListItem[] | null>(null);
-    const [activeCategory, setActiveCategory] = useState('');
-    const [paginationPage, setPaginationPage] = useState(1);
+    const [activeCategory, setActiveCategory] = useState('all');
+    const [pageNumber, setPageNumber] = useState(1);
 
     const dispatch = useAppDispatch();
     const { category } = useParams();
@@ -42,14 +40,7 @@ export const Content = ({ menuView }: ContentProps) => {
     );
 
     const getBooksByPagination = () => {
-        const filtersPayload =
-            category === NAV_MENU_ALL.category ? '' : `&filters[categories][path][$eq]=${category}`;
-
-        dispatch(
-            bookListRequestWithPagination(
-                `?pagination[page]=${paginationPage}&pagination[pageSize]=${BOOKS_LIST.pageSize}${filtersPayload}`,
-            ),
-        );
+        dispatch(bookListRequestWithPagination({ pageNumber, category: category as string }));
     };
 
     useEffect(() => {
@@ -63,7 +54,7 @@ export const Content = ({ menuView }: ContentProps) => {
             const { offsetHeight } = event.target.documentElement;
 
             if (scrollTop + innerHeight >= offsetHeight - 100 && !isLoading && !isAllDownloaded) {
-                setPaginationPage((currentPage) => currentPage + 1);
+                setPageNumber((currentPage) => currentPage + 1);
             }
         };
 
@@ -78,16 +69,16 @@ export const Content = ({ menuView }: ContentProps) => {
     useEffect(() => {
         getBooksByPagination();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [paginationPage]);
+    }, [pageNumber]);
 
     useEffect(() => {
         if (category !== activeCategory) {
             dispatch(bookListRequestClean());
 
-            if (paginationPage === 1) {
+            if (pageNumber === 1) {
                 getBooksByPagination();
             } else {
-                setPaginationPage(1);
+                setPageNumber(1);
             }
         }
 
