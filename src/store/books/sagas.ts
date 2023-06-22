@@ -7,8 +7,10 @@ import {
     DefaultValuesType,
     UpdateCommentPayloadType,
 } from '../../components/modal-rate-book/modal-rate-book';
-import { BOOKS_URL } from '../../constants/api';
+import { BOOKS_URL, FILTERS, PAGINATION } from '../../constants/api';
+import { BOOKS_LIST } from '../../constants/books-list';
 import { ERROR } from '../../constants/errors';
+import { NAV_MENU_ALL } from '../../constants/nav-menu-list';
 import { TOAST } from '../../constants/toast';
 import { MESSAGES } from '../../constants/toast-messages';
 import { authenticationSelector } from '../auth/selectors';
@@ -17,7 +19,12 @@ import { Comment, UserBooking } from '../user/types';
 import { setToast } from '../view';
 
 import { booksSelector } from './selectors';
-import { BookCategoriesDataType, BookDataType, BookListItem } from './types';
+import {
+    BookCategoriesDataType,
+    BookDataType,
+    BookListItem,
+    BookListPaginationPayload,
+} from './types';
 import {
     bookCategoriesFailure,
     bookCategoriesRequest,
@@ -28,8 +35,11 @@ import {
     bookingRequestSuccess,
     bookingUpdateRequest,
     bookListRequest,
+    bookListRequestAllDownloaded,
     bookListRequestFailure,
     bookListRequestSuccess,
+    bookListRequestWithPagination,
+    bookListRequestWithPaginationSuccess,
     bookRequest,
     bookRequestFailure,
     bookRequestSuccess,
@@ -49,6 +59,28 @@ function* bookListRequestWorker() {
         );
 
         yield put(bookListRequestSuccess(response.data));
+    } catch {
+        yield put(bookListRequestFailure());
+        yield put(setToast({ type: TOAST.error, text: ERROR.book }));
+    }
+}
+
+function* bookListRequestWithPaginationWorker({
+    payload,
+}: PayloadAction<BookListPaginationPayload>) {
+    const filter =
+        payload.category === NAV_MENU_ALL.category
+            ? ''
+            : `${FILTERS.categories}${payload.category}`;
+
+    try {
+        const response: AxiosResponse<BookListItem[]> = yield call(
+            axiosInstance.get,
+            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}&${filter}`,
+        );
+
+        yield put(bookListRequestWithPaginationSuccess(response.data));
+        yield put(bookListRequestAllDownloaded(response.data.length < 12));
     } catch {
         yield put(bookListRequestFailure());
         yield put(setToast({ type: TOAST.error, text: ERROR.book }));
@@ -262,6 +294,10 @@ function* bookReviewUpdateWorker({ payload }: PayloadAction<UpdateCommentPayload
 
 export function* watchBookListRequest() {
     yield takeLatest(bookListRequest, bookListRequestWorker);
+}
+
+export function* watchBookListRequestWithPagination() {
+    yield takeLatest(bookListRequestWithPagination, bookListRequestWithPaginationWorker);
 }
 
 export function* watchBookRequest() {

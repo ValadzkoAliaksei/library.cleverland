@@ -24,3 +24,12 @@ export const USERS_URL = {
 export const FILE_UPLOAD = {
     upload: `${BASE_URL}/upload`,
 };
+
+export const PAGINATION = {
+    page: 'pagination[page]=',
+    pageSize: 'pagination[pageSize]=',
+};
+
+export const FILTERS = {
+    categories: 'filters[categories][path][$eq]=',
+};

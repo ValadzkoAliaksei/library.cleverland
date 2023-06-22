@@ -6,6 +6,7 @@ export type BooksType = {
         isSuccess: boolean;
         isError: boolean;
         data: null | BookListItem[];
+        isAllDownloaded: boolean;
     };
     book: {
         isLoading: boolean;
@@ -75,6 +76,11 @@ export type BookListItem = {
     ];
 };
 
+export type BookListPaginationPayload = {
+    pageNumber: number;
+    category: string;
+};
+
 export type BookDataType = {
     id: number;
     title: string;
@@ -122,6 +128,7 @@ export type BookCategoriesItem = {
     name: string;
     path: string;
     id: number;
+    booksCount: number;
 };
 
 export type BookingModalPayload = {
