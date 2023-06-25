@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
-import { SORTING } from '../../../constants/sorting';
+import { SORTING, Sorting } from '../../../constants/sorting';
+import { useAppDispatch } from '../../../store/hooks';
+import { setSortCriterion } from '../../../store/search';
+import { searchSelector } from '../../../store/search/selectors';
 import { Button } from '../../button';
 import chevronAsc from '../assets/icon-chevron-asc.svg';
 import chevronDesc from '../assets/icon-chevron-desc.svg';
@@ -15,10 +19,23 @@ type ExpandingButtonProps = {
 };
 
 export const ExpandingButton = ({ isSearhView }: ExpandingButtonProps) => {
-    // const dispatch = useAppDispatch();
-
+    const dispatch = useAppDispatch();
     const [menuVisible, setMenuVisible] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
+    const { sortCriteria } = useSelector(searchSelector);
+
+    const closeMenu = (event: MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setMenuVisible(false);
+    };
+
+    const onChooseSortCriterion = (event: MouseEvent, sortingCriterion: Sorting) => {
+        if (sortCriteria.indexOf(sortingCriterion) === -1) {
+            dispatch(setSortCriterion([...sortCriteria, sortingCriterion]));
+        }
+        closeMenu(event);
+    };
 
     useEffect(() => {
         function handleClickOutside(event: any) {
@@ -44,19 +61,34 @@ export const ExpandingButton = ({ isSearhView }: ExpandingButtonProps) => {
             <img src={chevronAsc} alt='icon-open' />
             {menuVisible && (
                 <div className={styles.sortingMenu} ref={menuRef}>
-                    <div className={styles.sortingMenuHeader}>
+                    <a
+                        href=''
+                        className={styles.sortingMenuHeader}
+                        onClick={(event) => closeMenu(event)}
+                    >
                         <span className={styles.buttonSortText}>Сортировка</span>
                         <img src={chevronDesc} alt='icon-open' />
-                    </div>
+                    </a>
                     <hr />
                     <ul>
                         {SORTING.map((sortingCriterion) => (
-                            <li>
-                                <span>{sortingCriterion.title}</span>
-                                <img
-                                    src={sortingCriterion.direction === 'asc' ? sortAsc : sortDesc}
-                                    alt='icon-sort'
-                                />
+                            <li key={sortingCriterion.description}>
+                                <a
+                                    href=''
+                                    onClick={(event) =>
+                                        onChooseSortCriterion(event, sortingCriterion)
+                                    }
+                                >
+                                    <span>{sortingCriterion.title}</span>
+                                    <img
+                                        src={
+                                            sortingCriterion.direction === 'asc'
+                                                ? sortAsc
+                                                : sortDesc
+                                        }
+                                        alt='icon-sort'
+                                    />
+                                </a>
                             </li>
                         ))}
                     </ul>

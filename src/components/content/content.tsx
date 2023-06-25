@@ -33,7 +33,7 @@ export const Content = ({ menuView }: ContentProps) => {
     const isLoading = useAppSelector(getLoadingBooksList);
     const isAllDownloaded = useAppSelector(getIsAllBooksListDownloaded);
     const bookCategories = useAppSelector(getBookCategories);
-    const { filter, isSortedDesc } = useAppSelector(searchSelector);
+    const { filter } = useAppSelector(searchSelector);
 
     const listClassName = classNames(
         menuView === MenuViewEnum.window ? styles.viewWindow : styles.viewList,
@@ -94,13 +94,9 @@ export const Content = ({ menuView }: ContentProps) => {
                     ? bookList.filter(({ title }) => title.toLowerCase().includes(filter))
                     : bookList;
 
-            const sortedByRating = [...searchResult].sort((a, b) =>
-                isSortedDesc ? b.rating - a.rating : a.rating - b.rating,
-            );
-
-            setData(sortedByRating);
+            setData(searchResult);
         }
-    }, [filter, bookList, isSortedDesc, activeCategory]);
+    }, [filter, bookList, activeCategory]);
 
     return (
         <main data-test-id='content'>

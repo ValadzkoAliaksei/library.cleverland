@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { Sorting } from '../../constants/sorting';
+
 import { SearchParams } from './types';
 
 export const initialState: SearchParams = {
     filter: '',
-    isSortedDesc: true,
+    sortCriteria: [],
 };
 
 export const searchSlice = createSlice({
@@ -14,10 +16,10 @@ export const searchSlice = createSlice({
         searchbookList: (state, action: PayloadAction<string>) => {
             state.filter = action.payload;
         },
-        setSortMethod: (state) => {
-            state.isSortedDesc = !state.isSortedDesc;
+        setSortCriterion: (state, action: PayloadAction<Sorting[]>) => {
+            state.sortCriteria = action.payload;
         },
     },
 });
 
-export const { searchbookList, setSortMethod } = searchSlice.actions;
+export const { searchbookList, setSortCriterion } = searchSlice.actions;

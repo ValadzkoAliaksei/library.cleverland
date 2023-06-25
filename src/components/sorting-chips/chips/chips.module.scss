@@ -1,0 +1,23 @@
+.chips {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    height: 26px;
+    border-radius: 16px;
+    border: 1px solid var(--main-dark-30, rgba(54, 54, 54, 0.3));
+    text-align: center;
+    font-size: 12px;
+    font-family: Montserrat;
+    line-height: 18px;
+
+    span {
+        white-space: nowrap;
+    }
+
+    button {
+        background-color: inherit;
+        border: none;
+        cursor: pointer;
+    }
+}

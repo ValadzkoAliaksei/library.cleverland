@@ -52,6 +52,10 @@
     .sortingMenuHeader {
         display: flex;
         gap: 0 8px;
+        border: none;
+        background-color: inherit;
+        color: var(--subtitle);
+        cursor: pointer;
     }
 
     hr {
@@ -66,10 +70,9 @@
         flex-direction: column;
         gap: 10px;
 
-        li {
+        a {
             display: flex;
             gap: 8px;
-            cursor: pointer;
             font-size: 12px;
             font-weight: 500;
             line-height: 16px;
