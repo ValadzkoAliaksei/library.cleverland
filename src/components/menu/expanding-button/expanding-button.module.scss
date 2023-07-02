@@ -1,11 +1,15 @@
-.buttonSort {
-    background-repeat: no-repeat;
-    background-position: 16px 50%;
-    height: 38px;
+.root {
+    position: relative;
     width: 137px;
+    height: 38px;
+}
+
+.buttonSort {
+    height: 100%;
+    width: 100%;
     background-color: var(--background-main);
     box-shadow: none;
-    border-radius: 599px;
+    border-radius: 20px;
     border: 1px solid #e3e3e3;
     padding: 0 16px;
     color: var(--subtitle);
@@ -15,7 +19,6 @@
     align-items: center;
     justify-content: space-between;
     gap: 0 8px;
-    position: relative;
 }
 
 .buttonSort:hover {
@@ -26,12 +29,9 @@
     box-shadow: var(--box-shadow-button-active);
 }
 
-.buttonSortText {
-    text-align: start;
-}
-
 .sortingMenu {
     position: absolute;
+    z-index: 10;
     top: -1px;
     left: -2px;
     padding: 10px 18px;
@@ -49,7 +49,12 @@
         cursor: auto;
     }
 
+    .displayWhen370 {
+        display: none;
+    }
+
     .sortingMenuHeader {
+        margin-top: 1px;
         display: flex;
         gap: 0 8px;
         border: none;
@@ -58,7 +63,7 @@
         cursor: pointer;
     }
 
-    hr {
+    .devider {
         width: 106%;
         border: none;
         height: 1px;
@@ -82,25 +87,103 @@
                 white-space: nowrap;
             }
         }
-    }
-}
 
-@media (max-width: 620px) {
-    .buttonSort {
-        width: 38px;
-        height: 38px;
-        padding: 0;
-        justify-content: center;
-
-        .buttonSortText {
+        .smallScreenDevider {
             display: none;
         }
     }
 }
 
-@media (max-width: 370px) {
+.buttonSortSmall {
+    width: 38px;
+    height: 38px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: var(--background-main);
+    box-shadow: var(--box-shadow-button);
+    border: none;
+    border-radius: 50%;
+    color: var(--subtitle);
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+@media (max-width: 640px) {
+    .root {
+        width: 38px;
+    }
+
     .buttonSort {
-        width: 32px;
-        height: 32px;
+        display: none;
+    }
+
+    .buttonSortSmall {
+        display: flex;
+    }
+}
+
+@media (max-width: 370px) {
+    .root {
+        width: 30px;
+        height: 30px;
+    }
+
+    .buttonSortSmall {
+        width: 30px;
+        height: 30px;
+    }
+
+    .sortingMenu {
+        padding: 8px 16px;
+        width: 288px;
+
+        .sortingMenuHeader {
+            justify-content: space-between;
+
+            span {
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 18px;
+            }
+        }
+
+        .devider {
+            margin-top: 4px;
+            margin-bottom: 4px;
+            width: 100%;
+        }
+
+        .noDisplayWhen370 {
+            display: none;
+        }
+
+        .displayWhen370 {
+            display: block;
+        }
+
+        ul {
+            gap: 0px;
+
+            a {
+                padding: 4px 0px;
+                justify-content: space-between;
+                gap: 0px;
+                color: #a7a7a7;
+            }
+
+            li:not(:last-child) .smallScreenDevider {
+                display: block;
+                margin-top: 4px;
+                margin-bottom: 4px;
+                border: none;
+                height: 1px;
+                background: #ebebeb;
+            }
+        }
     }
 }

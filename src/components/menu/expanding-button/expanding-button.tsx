@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { MouseEvent, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
@@ -9,33 +9,21 @@ import { searchSelector } from '../../../store/search/selectors';
 import { Button } from '../../button';
 import chevronAsc from '../assets/icon-chevron-asc.svg';
 import chevronDesc from '../assets/icon-chevron-desc.svg';
+import iconClose from '../assets/icon-close.svg';
 import sortAsc from '../assets/sort-asc.svg';
 import sortDesc from '../assets/sort-desc.svg';
 
 import styles from './expanding-button.module.scss';
 
 type ExpandingButtonProps = {
-    isSearhView: boolean;
+    menuVisible: boolean;
+    setMenuVisible: (onChangeText: boolean) => void;
 };
 
-export const ExpandingButton = ({ isSearhView }: ExpandingButtonProps) => {
+export const ExpandingButton = ({ menuVisible, setMenuVisible }: ExpandingButtonProps) => {
     const dispatch = useAppDispatch();
-    const [menuVisible, setMenuVisible] = useState(false);
     const menuRef = useRef<HTMLDivElement | null>(null);
     const { sortCriteria } = useSelector(searchSelector);
-
-    const closeMenu = (event: MouseEvent) => {
-        event.preventDefault();
-        event.stopPropagation();
-        setMenuVisible(false);
-    };
-
-    const onChooseSortCriterion = (event: MouseEvent, sortingCriterion: Sorting) => {
-        if (sortCriteria.indexOf(sortingCriterion) === -1) {
-            dispatch(setSortCriterion([...sortCriteria, sortingCriterion]));
-        }
-        closeMenu(event);
-    };
 
     useEffect(() => {
         function handleClickOutside(event: any) {
@@ -49,16 +37,45 @@ export const ExpandingButton = ({ isSearhView }: ExpandingButtonProps) => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const closeMenu = (event: MouseEvent) => {
+        event.preventDefault();
+        event.stopPropagation();
+        setMenuVisible(false);
+    };
+
+    const onOpenMenu = () => {
+        setMenuVisible(true);
+    };
+
+    const onChooseSortCriterion = (event: MouseEvent, sortingCriterion: Sorting) => {
+        if (sortCriteria.indexOf(sortingCriterion) === -1) {
+            dispatch(setSortCriterion([...sortCriteria, sortingCriterion]));
+        }
+        closeMenu(event);
+    };
+
     return (
-        <Button
-            classButton={classNames(styles.buttonSort, !isSearhView && styles.buttonHidden)}
-            onClick={() => setMenuVisible(true)}
-            dataTestId='sort-rating-button'
-        >
-            <span className={styles.buttonSortText}>Сортировка</span>
-            <img src={chevronAsc} alt='icon-open' />
+        <div className={styles.root}>
+            <Button
+                classButton={classNames(styles.buttonSort)}
+                dataTestId='sort-rating-button'
+                onClick={onOpenMenu}
+            >
+                <span>Сортировка</span>
+                <img src={chevronAsc} alt='icon-open' />
+            </Button>
+            <Button
+                classButton={classNames(styles.buttonSortSmall)}
+                onClick={onOpenMenu}
+                dataTestId='sort-rating-button'
+            >
+                <img src={sortDesc} alt='icon-open' />
+            </Button>
+
             {menuVisible && (
                 <div className={styles.sortingMenu} ref={menuRef}>
                     <a
@@ -66,10 +83,15 @@ export const ExpandingButton = ({ isSearhView }: ExpandingButtonProps) => {
                         className={styles.sortingMenuHeader}
                         onClick={(event) => closeMenu(event)}
                     >
-                        <span className={styles.buttonSortText}>Сортировка</span>
-                        <img src={chevronDesc} alt='icon-open' />
+                        <span>Сортировка</span>
+                        <img
+                            src={chevronDesc}
+                            alt='icon-open'
+                            className={styles.noDisplayWhen370}
+                        />
+                        <img src={iconClose} alt='icon-close' className={styles.displayWhen370} />
                     </a>
-                    <hr />
+                    <hr className={styles.devider} />
                     <ul>
                         {SORTING.map((sortingCriterion) => (
                             <li key={sortingCriterion.description}>
@@ -89,11 +111,12 @@ export const ExpandingButton = ({ isSearhView }: ExpandingButtonProps) => {
                                         alt='icon-sort'
                                     />
                                 </a>
+                                <hr className={styles.smallScreenDevider} />
                             </li>
                         ))}
                     </ul>
                 </div>
             )}
-        </Button>
+        </div>
     );
 };

@@ -11,11 +11,12 @@ import iconSearch from './assets/icon-search.svg';
 import styles from './search.module.scss';
 
 type SearchProps = {
-    isSearhView: boolean;
-    setSearhView: (onChangeText: boolean) => void;
+    isSearchExpanded: boolean;
+    setIsSearchExpanded: (onChangeText: boolean) => void;
+    menuVisible: boolean;
 };
 
-export const Search = ({ isSearhView, setSearhView }: SearchProps) => {
+export const Search = ({ isSearchExpanded, setIsSearchExpanded, menuVisible }: SearchProps) => {
     const [value, setValue] = useState('');
     const dispatch = useAppDispatch();
 
@@ -25,16 +26,19 @@ export const Search = ({ isSearhView, setSearhView }: SearchProps) => {
     };
 
     return (
-        <div className={styles.search}>
+        <div className={classNames(styles.search, menuVisible && styles.noDisplayWhen370)}>
             <Button
-                classButton={classNames(styles.searchButton, !isSearhView && styles.buttonHidden)}
-                onClick={() => setSearhView(!isSearhView)}
+                classButton={classNames(
+                    styles.searchButton,
+                    isSearchExpanded && styles.buttonHidden,
+                )}
+                onClick={() => setIsSearchExpanded(true)}
                 dataTestId='button-search-open'
             >
                 <img src={iconSearch} alt='icon-search' />
             </Button>
             <input
-                className={classNames(styles.input, !isSearhView && styles.buttonShow)}
+                className={classNames(styles.input, isSearchExpanded && styles.elementShow)}
                 placeholder='Поиск книги или автора…'
                 value={value}
                 onChange={handleChange}
@@ -43,9 +47,9 @@ export const Search = ({ isSearhView, setSearhView }: SearchProps) => {
             <Button
                 classButton={classNames(
                     styles.searchButtonClose,
-                    isSearhView && styles.buttonHidden,
+                    !isSearchExpanded && styles.buttonHidden,
                 )}
-                onClick={() => setSearhView(!isSearhView)}
+                onClick={() => setIsSearchExpanded(false)}
                 dataTestId='button-search-close'
             >
                 <img src={iconClose} alt='icon-close' />

@@ -1,5 +1,6 @@
 .search {
     display: grid;
+    position: relative;
     grid-auto-flow: column;
     column-gap: 6px;
     align-items: center;
@@ -40,9 +41,10 @@
     height: 16px;
     border: none;
     cursor: pointer;
+    display: none;
 }
 
-@media (max-width: 1070px) {
+@media (max-width: 1080px) {
     .input {
         width: 274px;
     }
@@ -60,7 +62,13 @@
     }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 720px) {
+    .input {
+        width: 244px;
+    }
+}
+
+@media (max-width: 550px) {
     .search {
         height: 38px;
         align-items: start;
@@ -77,13 +85,14 @@
         display: none;
     }
 
-    .buttonShow {
+    .elementShow {
         display: block;
         position: relative;
     }
 
     .searchButtonClose {
         position: absolute;
+        display: block;
         right: 30px;
         top: 11px;
     }
@@ -100,6 +109,7 @@
         border-radius: 599px;
         grid-auto-flow: column;
         cursor: pointer;
+        transition: all 0.2s linear;
     }
 
     .input:focus {
@@ -121,6 +131,10 @@
 
     .searchButtonClose {
         top: 8px;
+    }
+
+    .noDisplayWhen370 {
+        display: none;
     }
 }
 

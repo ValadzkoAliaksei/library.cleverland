@@ -5,6 +5,7 @@
     grid-template-columns: 1fr 1fr;
     margin-bottom: 16px;
     position: relative;
+    column-gap: 32px;
 }
 
 .searchSortBlock {
@@ -21,7 +22,34 @@
     display: grid;
     grid-template-columns: max-content max-content;
     justify-content: end;
-    column-gap: 16px;
+    align-items: center;
+    column-gap: 32px;
+}
+
+.bookingContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bookingCheckbox {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #a7a7a7;
+    border-radius: 6px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.2s linear;
+}
+
+.bookingCheckbox:checked {
+    border: none;
+    background-image: url('./assets/checkbox-background.svg');
+    background-position: center;
+    background-size: cover;
 }
 
 .buttonDisplay {
@@ -55,9 +83,25 @@
     display: none;
 }
 
+@media (max-width: 1120px) {
+    .menu {
+        column-gap: 16px;
+    }
+
+    .display {
+        column-gap: 16px;
+    }
+}
+
 @media (max-width: 800px) {
     .menu {
         margin-bottom: 24px;
+    }
+}
+
+@media (max-width: 640px) {
+    .noDisplayWhen640 {
+        display: none;
     }
 }
 
@@ -67,12 +111,24 @@
         margin-bottom: 20px;
     }
 
-    .menuSearh {
-        grid-template-columns: 1fr;
-    }
-
     .buttonDisplay {
         height: 32px;
         width: 32px;
+    }
+
+    .bookingContainer {
+        gap: 4px;
+    }
+
+    .bookingCheckbox {
+        width: 16px;
+        height: 16px;
+    }
+
+    .bookingLabel {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        letter-spacing: 0.2px;
     }
 }
