@@ -76,7 +76,7 @@ function* bookListRequestWithPaginationWorker({
     try {
         const response: AxiosResponse<BookListItem[]> = yield call(
             axiosInstance.get,
-            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}&${filter}`,
+            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}&${filter}${payload.sortingCriteria}`,
         );
 
         yield put(bookListRequestWithPaginationSuccess(response.data));

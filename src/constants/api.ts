@@ -33,3 +33,7 @@ export const PAGINATION = {
 export const FILTERS = {
     categories: 'filters[categories][path][$eq]=',
 };
+
+export const SORTING = {
+    categories: 'filters[categories][path][$eq]=',
+};

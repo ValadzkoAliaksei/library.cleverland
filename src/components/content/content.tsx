@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
 import { MenuViewEnum } from '../../constants/menu-view';
+import { Sorting } from '../../constants/sorting';
 import { bookListRequestClean, bookListRequestWithPagination } from '../../store/books';
 import {
     getBookCategories,
@@ -33,19 +34,54 @@ export const Content = ({ menuView }: ContentProps) => {
     const isLoading = useAppSelector(getLoadingBooksList);
     const isAllDownloaded = useAppSelector(getIsAllBooksListDownloaded);
     const bookCategories = useAppSelector(getBookCategories);
-    const { filter } = useAppSelector(searchSelector);
+    const { filter, sortCriteria } = useAppSelector(searchSelector);
+
+    console.log(sortCriteria);
 
     const listClassName = classNames(
         menuView === MenuViewEnum.window ? styles.viewWindow : styles.viewList,
     );
 
+    const createCriteriaString = (sortCriteria: Sorting[]) =>
+        sortCriteria.reduce(
+            (accum, criterion, index) =>
+                `${accum}&sort[${index}]=${criterion.value}%3A${criterion.direction}`,
+            '',
+        );
+
     const getBooksByPagination = () => {
-        dispatch(bookListRequestWithPagination({ pageNumber, category: category as string }));
+        console.log('Download');
+        dispatch(
+            bookListRequestWithPagination({
+                pageNumber,
+                category: category as string,
+                sortingCriteria: createCriteriaString(sortCriteria),
+            }),
+        );
     };
 
     useEffect(() => {
+        if (sortCriteria.length) {
+            dispatch(bookListRequestClean());
+
+            if (pageNumber === 1) {
+                getBooksByPagination();
+            } else {
+                setPageNumber(1);
+            }
+            //
+
+            /* setPageNumber(1) */
+            // dispatch(bookListRequestWithPagination({ pageNumber: 1, category: category as string, sortingCriteria }));
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sortCriteria]);
+
+    useEffect(() => {
         dispatch(bookListRequestClean());
-    }, [dispatch]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
         const scrollHandler = (event: any) => {
@@ -85,7 +121,7 @@ export const Content = ({ menuView }: ContentProps) => {
         setActiveCategory(category as string);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [category, activeCategory, dispatch]);
+    }, [category, activeCategory]);
 
     useEffect(() => {
         if (bookList) {

@@ -52,9 +52,12 @@ export const ExpandingButton = ({ menuVisible, setMenuVisible }: ExpandingButton
     };
 
     const onChooseSortCriterion = (event: MouseEvent, sortingCriterion: Sorting) => {
-        if (sortCriteria.indexOf(sortingCriterion) === -1) {
-            dispatch(setSortCriterion([...sortCriteria, sortingCriterion]));
-        }
+        const filteredCriterias = sortCriteria.filter(
+            (criterion) => criterion.title !== sortingCriterion.title,
+        );
+
+        filteredCriterias.push(sortingCriterion);
+        dispatch(setSortCriterion(filteredCriterias));
         closeMenu(event);
     };
 

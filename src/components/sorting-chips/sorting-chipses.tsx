@@ -1,6 +1,7 @@
-import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
 import { Sorting } from '../../constants/sorting';
+import { useAppSelector } from '../../store/hooks';
 import { searchSelector } from '../../store/search/selectors';
 
 import { Chips } from './chips';
@@ -12,7 +13,7 @@ export type ChipProps = {
 };
 
 export const SortingChipses = () => {
-    const { sortCriteria } = useSelector(searchSelector);
+    const { sortCriteria } = useAppSelector(searchSelector);
 
     return (
         <div className={styles.root}>
