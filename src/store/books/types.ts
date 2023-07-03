@@ -80,6 +80,7 @@ export type BookListPaginationPayload = {
     pageNumber: number;
     category: string;
     sortingCriteria: string;
+    bookingFree: boolean;
 };
 
 export type BookDataType = {

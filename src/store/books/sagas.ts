@@ -73,10 +73,12 @@ function* bookListRequestWithPaginationWorker({
             ? ''
             : `${FILTERS.categories}${payload.category}`;
 
+    const bookingFree = payload.bookingFree ? FILTERS.booking : '';
+
     try {
         const response: AxiosResponse<BookListItem[]> = yield call(
             axiosInstance.get,
-            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}&${filter}${payload.sortingCriteria}`,
+            `${BOOKS_URL.list}?${PAGINATION.page}${payload.pageNumber}&${PAGINATION.pageSize}${BOOKS_LIST.pageSize}${filter}${payload.sortingCriteria}${bookingFree}`,
         );
 
         yield put(bookListRequestWithPaginationSuccess(response.data));

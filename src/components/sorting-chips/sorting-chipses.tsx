@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { Sorting } from '../../constants/sorting';
 import { useAppSelector } from '../../store/hooks';
 import { searchSelector } from '../../store/search/selectors';

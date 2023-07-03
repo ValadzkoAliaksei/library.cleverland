@@ -7,6 +7,7 @@ import { SearchParams } from './types';
 export const initialState: SearchParams = {
     filter: '',
     sortCriteria: [],
+    bookingFree: false,
 };
 
 export const searchSlice = createSlice({
@@ -19,7 +20,10 @@ export const searchSlice = createSlice({
         setSortCriterion: (state, action: PayloadAction<Sorting[]>) => {
             state.sortCriteria = action.payload;
         },
+        setBookingFree: (state, action: PayloadAction<boolean>) => {
+            state.bookingFree = action.payload;
+        },
     },
 });
 
-export const { searchbookList, setSortCriterion } = searchSlice.actions;
+export const { searchbookList, setSortCriterion, setBookingFree } = searchSlice.actions;

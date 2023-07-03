@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import classNames from 'classnames';
 
@@ -24,19 +24,15 @@ type ContentProps = {
 
 export const Content = ({ menuView }: ContentProps) => {
     const [data, setData] = useState<BookListItem[] | null>(null);
-    const [activeCategory, setActiveCategory] = useState('all');
     const [pageNumber, setPageNumber] = useState(1);
-
+    const firstUpdateFlag = useRef(true);
     const dispatch = useAppDispatch();
     const { category } = useParams();
-
     const bookList = useAppSelector(getBookList);
     const isLoading = useAppSelector(getLoadingBooksList);
     const isAllDownloaded = useAppSelector(getIsAllBooksListDownloaded);
     const bookCategories = useAppSelector(getBookCategories);
-    const { filter, sortCriteria } = useAppSelector(searchSelector);
-
-    console.log(sortCriteria);
+    const { filter, sortCriteria, bookingFree } = useAppSelector(searchSelector);
 
     const listClassName = classNames(
         menuView === MenuViewEnum.window ? styles.viewWindow : styles.viewList,
@@ -50,33 +46,15 @@ export const Content = ({ menuView }: ContentProps) => {
         );
 
     const getBooksByPagination = () => {
-        console.log('Download');
         dispatch(
             bookListRequestWithPagination({
                 pageNumber,
                 category: category as string,
                 sortingCriteria: createCriteriaString(sortCriteria),
+                bookingFree,
             }),
         );
     };
-
-    useEffect(() => {
-        if (sortCriteria.length) {
-            dispatch(bookListRequestClean());
-
-            if (pageNumber === 1) {
-                getBooksByPagination();
-            } else {
-                setPageNumber(1);
-            }
-            //
-
-            /* setPageNumber(1) */
-            // dispatch(bookListRequestWithPagination({ pageNumber: 1, category: category as string, sortingCriteria }));
-        }
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortCriteria]);
 
     useEffect(() => {
         dispatch(bookListRequestClean());
@@ -91,6 +69,7 @@ export const Content = ({ menuView }: ContentProps) => {
 
             if (scrollTop + innerHeight >= offsetHeight - 100 && !isLoading && !isAllDownloaded) {
                 setPageNumber((currentPage) => currentPage + 1);
+                document.removeEventListener('scroll', scrollHandler);
             }
         };
 
@@ -108,20 +87,18 @@ export const Content = ({ menuView }: ContentProps) => {
     }, [pageNumber]);
 
     useEffect(() => {
-        if (category !== activeCategory) {
+        if (!firstUpdateFlag.current) {
             dispatch(bookListRequestClean());
-
             if (pageNumber === 1) {
                 getBooksByPagination();
             } else {
                 setPageNumber(1);
             }
+        } else {
+            firstUpdateFlag.current = false;
         }
-
-        setActiveCategory(category as string);
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [category, activeCategory]);
+    }, [sortCriteria, category, bookingFree]);
 
     useEffect(() => {
         if (bookList) {
@@ -132,7 +109,7 @@ export const Content = ({ menuView }: ContentProps) => {
 
             setData(searchResult);
         }
-    }, [filter, bookList, activeCategory]);
+    }, [filter, bookList]);
 
     return (
         <main data-test-id='content'>

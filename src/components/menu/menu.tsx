@@ -3,7 +3,8 @@ import classNames from 'classnames';
 
 import { MenuViewEnum } from '../../constants/menu-view';
 import { getBookList } from '../../store/books/selectors';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { setBookingFree } from '../../store/search';
 import { Button } from '../button';
 import { Search } from '../search';
 
@@ -20,9 +21,16 @@ export type MenyProps = {
 
 export const Menu = ({ menuView, setMenuView }: MenyProps) => {
     const [menuVisible, setMenuVisible] = useState(false);
+    const [isChecked, setIsChecked] = useState(false);
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [isFilteringExpanded, setIsFilteringExpanded] = useState(false);
     const bookList = useAppSelector(getBookList);
+    const dispatch = useAppDispatch();
+
+    const handleCheckboxChange = () => {
+        dispatch(setBookingFree(!isChecked));
+        setIsChecked(!isChecked);
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -71,7 +79,12 @@ export const Menu = ({ menuView, setMenuView }: MenyProps) => {
                             )}
                         >
                             <label className={styles.bookingContainer}>
-                                <input type='checkbox' className={styles.bookingCheckbox} />
+                                <input
+                                    type='checkbox'
+                                    className={styles.bookingCheckbox}
+                                    checked={isChecked}
+                                    onChange={handleCheckboxChange}
+                                />
                                 <span className={styles.bookingLabel}>Скрыть бронь</span>
                             </label>
                             <Button

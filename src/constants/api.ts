@@ -31,9 +31,6 @@ export const PAGINATION = {
 };
 
 export const FILTERS = {
-    categories: 'filters[categories][path][$eq]=',
-};
-
-export const SORTING = {
-    categories: 'filters[categories][path][$eq]=',
+    categories: '&filters[categories][path][$eq]=',
+    booking: '&filters[booking][id][$notNull]=false',
 };
