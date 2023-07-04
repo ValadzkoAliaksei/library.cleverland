@@ -51,7 +51,7 @@ export const Menu = ({ menuView, setMenuView }: MenyProps) => {
             window.removeEventListener('resize', handleResize);
         };
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isSearchExpanded, isFilteringExpanded]);
 
     return (
         <div className={classNames(styles.menu)}>

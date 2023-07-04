@@ -6,12 +6,10 @@ import { MenuViewEnum } from '../../constants/menu-view';
 import { Sorting } from '../../constants/sorting';
 import { bookListRequestClean, bookListRequestWithPagination } from '../../store/books';
 import {
-    getBookCategories,
     getBookList,
     getIsAllBooksListDownloaded,
     getLoadingBooksList,
 } from '../../store/books/selectors';
-import { BookListItem } from '../../store/books/types';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { searchSelector } from '../../store/search/selectors';
 import { Card } from '../card';
@@ -23,7 +21,6 @@ type ContentProps = {
 };
 
 export const Content = ({ menuView }: ContentProps) => {
-    const [data, setData] = useState<BookListItem[] | null>(null);
     const [pageNumber, setPageNumber] = useState(1);
     const firstUpdateFlag = useRef(true);
     const dispatch = useAppDispatch();
@@ -31,7 +28,7 @@ export const Content = ({ menuView }: ContentProps) => {
     const bookList = useAppSelector(getBookList);
     const isLoading = useAppSelector(getLoadingBooksList);
     const isAllDownloaded = useAppSelector(getIsAllBooksListDownloaded);
-    const bookCategories = useAppSelector(getBookCategories);
+
     const { filter, sortCriteria, bookingFree } = useAppSelector(searchSelector);
 
     const listClassName = classNames(
@@ -52,6 +49,7 @@ export const Content = ({ menuView }: ContentProps) => {
                 category: category as string,
                 sortingCriteria: createCriteriaString(sortCriteria),
                 bookingFree,
+                filter,
             }),
         );
     };
@@ -98,24 +96,12 @@ export const Content = ({ menuView }: ContentProps) => {
             firstUpdateFlag.current = false;
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortCriteria, category, bookingFree]);
-
-    useEffect(() => {
-        if (bookList) {
-            const searchResult =
-                filter.length > 0
-                    ? bookList.filter(({ title }) => title.toLowerCase().includes(filter))
-                    : bookList;
-
-            setData(searchResult);
-        }
-    }, [filter, bookList]);
+    }, [sortCriteria, category, bookingFree, filter]);
 
     return (
         <main data-test-id='content'>
             {bookList &&
-                bookCategories &&
-                (data && data.length === 0 ? (
+                (bookList.length === 0 ? (
                     filter ? (
                         <div
                             className={styles.emptyDataText}
@@ -136,7 +122,7 @@ export const Content = ({ menuView }: ContentProps) => {
                         )}
                         data-test-id='cards-list'
                     >
-                        {data?.map((book) => (
+                        {bookList?.map((book) => (
                             <Card data={book} key={book.id} menuView={menuView} />
                         ))}
                     </ul>

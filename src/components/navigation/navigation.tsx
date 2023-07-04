@@ -105,7 +105,10 @@ export const Navigation = ({
                                     ? classNames(styles.navItem, styles.navItemActive)
                                     : styles.navItem
                             }
-                            onClick={() => setButtonState?.(false)}
+                            onClick={() => {
+                                setButtonState?.(false);
+                                dispatch(searchbookList(''));
+                            }}
                             data-test-id={`${dataTestid}-books`}
                         >
                             Все книги
@@ -121,7 +124,10 @@ export const Navigation = ({
                                             ? classNames(styles.navItem, styles.navItemActive)
                                             : styles.navItem
                                     }
-                                    onClick={() => setButtonState?.(false)}
+                                    onClick={() => {
+                                        setButtonState?.(false);
+                                        dispatch(searchbookList(''));
+                                    }}
                                     data-test-id={`${dataTestid}-${path}`}
                                 >
                                     {name}

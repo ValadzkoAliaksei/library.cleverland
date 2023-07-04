@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { searchbookList } from '../../store/search';
+import { searchSelector } from '../../store/search/selectors';
 import { Button } from '../button';
 
 import iconClose from './assets/icon-close.svg';
@@ -17,13 +18,28 @@ type SearchProps = {
 };
 
 export const Search = ({ isSearchExpanded, setIsSearchExpanded, menuVisible }: SearchProps) => {
-    const [value, setValue] = useState('');
     const dispatch = useAppDispatch();
+    const { filter } = useAppSelector(searchSelector);
+    const [value, setValue] = useState('');
 
     const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         setValue(target.value.trimStart());
-        dispatch(searchbookList(target.value.trimStart().toLowerCase()));
     };
+
+    const handleSearch = () => {
+        dispatch(searchbookList(value.toLowerCase()));
+    };
+
+    const handleEnterPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        console.log(event);
+        if (event.key === 'Enter') {
+            dispatch(searchbookList(value.toLowerCase()));
+        }
+    };
+
+    useEffect(() => {
+        setValue(filter);
+    }, [filter]);
 
     return (
         <div className={classNames(styles.search, menuVisible && styles.noDisplayWhen370)}>
@@ -42,8 +58,18 @@ export const Search = ({ isSearchExpanded, setIsSearchExpanded, menuVisible }: S
                 placeholder='Поиск книги или автора…'
                 value={value}
                 onChange={handleChange}
+                onKeyDown={handleEnterPress}
                 data-test-id='input-search'
             />
+            <Button
+                classButton={classNames(
+                    styles.searchButtonSend,
+                    isSearchExpanded && styles.searchButtonSendShow,
+                )}
+                onClick={handleSearch}
+            >
+                &nbsp;
+            </Button>
             <Button
                 classButton={classNames(
                     styles.searchButtonClose,

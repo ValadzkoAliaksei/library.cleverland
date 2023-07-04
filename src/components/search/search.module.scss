@@ -8,9 +8,6 @@
 
 .input {
     margin: 0;
-    background-image: url(./assets/icon-search.svg);
-    background-repeat: no-repeat;
-    background-position: 16px;
     width: 350px;
     height: 38px;
     background-color: var(--background-main);
@@ -28,7 +25,6 @@
 .input:focus {
     outline: none;
     caret-color: #f83600;
-    background-image: url(./assets/icon-search-color.svg);
 }
 
 .searchButton {
@@ -42,6 +38,23 @@
     border: none;
     cursor: pointer;
     display: none;
+}
+
+.searchButtonSend {
+    position: absolute;
+    left: 9px;
+    width: 30px;
+    height: 83%;
+    cursor: pointer;
+    border: 0;
+    background-image: url(./assets/icon-search.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--background-main);
+}
+
+.input:focus + .searchButtonSend {
+    background-image: url(./assets/icon-search-color.svg);
 }
 
 @media (max-width: 1080px) {
@@ -80,9 +93,17 @@
         width: 88vw;
         height: 38px;
         background-image: none;
-        padding-left: 16px;
         position: absolute;
         display: none;
+    }
+
+    .searchButtonSend {
+        top: 3px;
+        display: none;
+    }
+
+    .searchButtonSendShow {
+        display: block;
     }
 
     .elementShow {
@@ -127,6 +148,12 @@
     .searchButton {
         width: 30px;
         height: 30px;
+    }
+
+    .searchButtonSend {
+        left: 9px;
+        width: 28px;
+        height: 67%;
     }
 
     .searchButtonClose {
